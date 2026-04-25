@@ -192,7 +192,68 @@ export const questionBank = [
   }
 ];
 
+export const generateDynamicMathQuestion = () => {
+  const operations = ['+', '-', '*'];
+  const op = operations[Math.floor(Math.random() * operations.length)];
+  let num1, num2, answer;
+  let difficulty = "Easy";
+  
+  if (op === '+') {
+    num1 = Math.floor(Math.random() * 100) + 20;
+    num2 = Math.floor(Math.random() * 100) + 20;
+    answer = num1 + num2;
+  } else if (op === '-') {
+    num1 = Math.floor(Math.random() * 100) + 50;
+    num2 = Math.floor(Math.random() * num1);
+    answer = num1 - num2;
+  } else {
+    num1 = Math.floor(Math.random() * 12) + 2;
+    num2 = Math.floor(Math.random() * 12) + 2;
+    answer = num1 * num2;
+    difficulty = "Medium";
+  }
+
+  // Generate 3 wrong options
+  const wrong1 = answer + Math.floor(Math.random() * 10) + 1;
+  const wrong2 = answer - Math.floor(Math.random() * 10) - 1;
+  const wrong3 = answer + (Math.random() > 0.5 ? 10 : -10);
+  
+  let options = [answer, wrong1, wrong2, wrong3];
+  
+  // Shuffle options
+  for (let i = options.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [options[i], options[j]] = [options[j], options[i]];
+  }
+  
+  const correct_idx = options.indexOf(answer);
+
+  return {
+    id: `dyn_${Date.now()}_${Math.floor(Math.random()*1000)}`,
+    subject: "Mathematics",
+    topic: "Mental Arithmetic",
+    difficulty,
+    body: `What is the result of: ${num1} ${op} ${num2}?`,
+    options: options.map(String),
+    correct_idx,
+    explanation: `The correct calculation is ${num1} ${op} ${num2} = ${answer}.`
+  };
+};
+
 export const getRandomQuestions = (count) => {
-  const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
+  const questions = [];
+  
+  // Mix static and dynamic questions
+  const shuffledStatic = [...questionBank].sort(() => 0.5 - Math.random());
+  
+  for (let i = 0; i < count; i++) {
+    // 50% chance of dynamic math question, or if we run out of static questions
+    if (Math.random() > 0.5 || shuffledStatic.length === 0) {
+      questions.push(generateDynamicMathQuestion());
+    } else {
+      questions.push(shuffledStatic.pop());
+    }
+  }
+  
+  return questions;
 };
