@@ -7,6 +7,8 @@ import SpeedChallenge from './pages/SpeedChallenge';
 function App() {
   return (
     <div className="relative min-h-screen text-white">
+      <div className="hex-bg"></div>
+      <div className="grid-overlay"></div>
       <div className="scanlines"></div>
       
       {/* Navbar Placeholder */}

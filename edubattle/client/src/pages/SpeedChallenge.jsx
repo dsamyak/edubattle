@@ -54,12 +54,12 @@ const SpeedChallenge = () => {
     <div className={`max-w-4xl mx-auto h-[80vh] flex flex-col transition-colors duration-200 ${flashColor || ''}`}>
       {!gameOver ? (
         <>
-          <div className="flex justify-between items-center mb-8 bg-black/40 p-4 border border-white/10 rounded-lg">
-            <div className="text-3xl font-display text-[#00ffcc]">SCORE: {score}</div>
-            <div className={`text-5xl font-mono font-bold ${timeLeft <= 10 ? 'text-[#ff0055] animate-pulse' : 'text-white'}`}>
+          <div className="flex justify-between items-center mb-8 bg-black/60 p-4 border-2 border-[#ff0055]/30 rounded-lg shadow-[0_0_20px_rgba(255,0,85,0.1)]">
+            <div className="text-3xl font-display font-bold text-[#00ffcc] tracking-widest drop-shadow-[0_0_8px_#00ffcc]">SCORE: {score}</div>
+            <div className={`text-6xl font-mono font-black tracking-widest ${timeLeft <= 10 ? 'text-[#ff0055] animate-pulse drop-shadow-[0_0_15px_#ff0055]' : 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]'}`}>
               00:{timeLeft.toString().padStart(2, '0')}
             </div>
-            <div className="text-xl font-mono text-[#a200ff]">Q: {currentIndex + 1}/50</div>
+            <div className="text-xl font-mono font-bold text-[#a200ff] bg-[#a200ff]/20 px-4 py-2 rounded-lg border border-[#a200ff]/50">Q: {currentIndex + 1}/50</div>
           </div>
 
           <div className="flex-1 flex flex-col">
@@ -72,8 +72,8 @@ const SpeedChallenge = () => {
                 transition={{ duration: 0.2 }}
                 className="flex-1 flex flex-col"
               >
-                <div className="cyber-card p-8 mb-6 flex-1 flex flex-col justify-center text-center">
-                  <h2 className="text-3xl leading-relaxed">{questions[currentIndex].body}</h2>
+                <div className="game-card-3d p-10 mb-8 flex-1 flex flex-col justify-center text-center bg-black/50 border-[#ff0055]/20 hover:border-[#ff0055]/50">
+                  <h2 className="text-3xl md:text-5xl font-bold leading-tight drop-shadow-lg">{questions[currentIndex].body}</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -98,11 +98,11 @@ const SpeedChallenge = () => {
           animate={{ opacity: 1, scale: 1 }}
           className="flex-1 flex items-center justify-center"
         >
-          <div className="cyber-card p-12 text-center max-w-lg w-full border-[#00ffcc]/50">
-            <h1 className="text-5xl mb-4 font-display text-[#00ffcc] glitch" data-text="TIME'S UP!">
+          <div className="game-card-3d p-12 text-center max-w-lg w-full border-[#ff0055]/50 bg-black/60 shadow-[0_0_50px_rgba(255,0,85,0.2)]">
+            <h1 className="text-6xl mb-6 font-display font-black text-[#ff0055] drop-shadow-[0_0_20px_#ff0055] glitch" data-text="TIME'S UP!">
               TIME'S UP!
             </h1>
-            <p className="font-mono text-2xl mb-8">FINAL SCORE: <span className="text-white font-bold">{score}</span></p>
+            <p className="font-mono text-3xl mb-10 bg-white/5 py-4 rounded border border-white/10">FINAL SCORE: <br/><span className="text-[#00ffcc] font-black text-5xl drop-shadow-[0_0_10px_#00ffcc] block mt-2">{score}</span></p>
             
             <div className="flex gap-4">
               <button 
@@ -113,13 +113,13 @@ const SpeedChallenge = () => {
                   setTimeLeft(60);
                   setGameOver(false);
                 }}
-                className="btn-neon flex-1"
+                className="btn-action flex-1"
               >
                 RETRY
               </button>
               <button 
                 onClick={() => navigate('/dashboard')}
-                className="btn-neon-purple flex-1"
+                className="btn-action-purple flex-1"
               >
                 HUB
               </button>

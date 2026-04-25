@@ -97,12 +97,12 @@ const Battle1v1 = () => {
         {/* Player 1 */}
         <div className="w-1/3">
           <div className="flex justify-between mb-2">
-            <span className="font-bold text-[#00ffcc]">YOU</span>
-            <span className="font-mono text-sm">{Math.ceil(playerHp)} HP</span>
+            <span className="font-bold text-[#00ffcc] tracking-widest text-lg drop-shadow-[0_0_5px_#00ffcc]">YOU</span>
+            <span className="font-mono text-lg">{Math.ceil(playerHp)} HP</span>
           </div>
-          <div className="hp-bar-container">
+          <div className="gaming-hp-container">
             <div 
-              className={`hp-bar-fill ${playerHp > 60 ? 'high' : playerHp > 30 ? 'med' : 'low'}`}
+              className={`gaming-hp-fill ${playerHp > 60 ? 'hp-high' : playerHp > 30 ? 'hp-med' : 'hp-low'}`}
               style={{ width: `${playerHp}%` }}
             />
           </div>
@@ -121,12 +121,12 @@ const Battle1v1 = () => {
         {/* Player 2 */}
         <div className="w-1/3">
           <div className="flex justify-between mb-2">
-            <span className="font-mono text-sm">{Math.ceil(opponentHp)} HP</span>
-            <span className="font-bold text-[#ff0055]">OPPONENT</span>
+            <span className="font-mono text-lg">{Math.ceil(opponentHp)} HP</span>
+            <span className="font-bold text-[#ff0055] tracking-widest text-lg drop-shadow-[0_0_5px_#ff0055]">OPPONENT</span>
           </div>
-          <div className="hp-bar-container" style={{ transform: 'scaleX(-1)' }}>
+          <div className="gaming-hp-container" style={{ transform: 'skewX(-15deg) scaleX(-1)' }}>
             <div 
-              className={`hp-bar-fill ${opponentHp > 60 ? 'high' : opponentHp > 30 ? 'med' : 'low'}`}
+              className={`gaming-hp-fill ${opponentHp > 60 ? 'hp-high' : opponentHp > 30 ? 'hp-med' : 'hp-low'}`}
               style={{ width: `${opponentHp}%` }}
             />
           </div>
@@ -137,11 +137,11 @@ const Battle1v1 = () => {
         <div className="flex-1 flex flex-col md:flex-row gap-6">
           {/* Main Question Area */}
           <div className="flex-1 flex flex-col">
-            <div className="cyber-card p-8 mb-6 flex-1 flex flex-col justify-center">
-              <div className="text-xs font-mono text-[#00ffcc] mb-4 uppercase tracking-widest">
-                {q.subject} // {q.topic} // {q.difficulty}
+            <div className="game-card-3d p-8 mb-6 flex-1 flex flex-col justify-center bg-black/40">
+              <div className="text-sm font-mono text-[#00ffcc] mb-4 uppercase tracking-widest border-b border-[#00ffcc]/30 pb-2 inline-block self-start">
+                {q.subject} <span className="text-white/30">//</span> {q.topic} <span className="text-white/30">//</span> {q.difficulty}
               </div>
-              <h2 className="text-2xl md:text-3xl leading-relaxed mb-8">{q.body}</h2>
+              <h2 className="text-2xl md:text-4xl leading-relaxed mb-4 font-bold text-white drop-shadow-md">{q.body}</h2>
             </div>
 
             {/* Options */}
@@ -171,8 +171,8 @@ const Battle1v1 = () => {
 
           {/* Side Strategy Panel */}
           <div className="w-full md:w-64 flex flex-col gap-4">
-            <div className="cyber-card p-4 border-[#a200ff]/30">
-              <h3 className="text-sm text-[#a200ff] mb-4 text-center">WAGER CONFIDENCE</h3>
+            <div className="game-card-3d p-4 border-[#a200ff]/30 bg-black/50">
+              <h3 className="text-sm text-[#a200ff] mb-4 text-center font-display font-bold tracking-widest border-b border-[#a200ff]/30 pb-2">WAGER CONFIDENCE</h3>
               <div className="flex flex-col gap-2">
                 {['high', 'med', 'low'].map(level => (
                   <button
@@ -198,12 +198,12 @@ const Battle1v1 = () => {
             <AnimatePresence>
               {roundResult && (
                 <motion.div 
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  className="cyber-card p-4 border-[#00ffcc]/30 bg-[#00ffcc]/5"
+                  initial={{ opacity: 0, height: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, height: 'auto', scale: 1 }}
+                  className="game-card-3d p-4 border-[#00ffcc]/50 bg-[#00ffcc]/10 shadow-[0_0_20px_rgba(0,255,204,0.15)]"
                 >
-                  <h4 className="text-[#00ffcc] text-xs mb-2">SYSTEM LOG</h4>
-                  <p className="text-sm font-mono text-white/80">{q.explanation}</p>
+                  <h4 className="text-[#00ffcc] text-xs mb-2 font-bold tracking-widest border-b border-[#00ffcc]/30 pb-1">SYSTEM LOG</h4>
+                  <p className="text-sm font-mono text-white/90 leading-relaxed mt-2">{q.explanation}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -216,21 +216,21 @@ const Battle1v1 = () => {
           animate={{ opacity: 1, scale: 1 }}
           className="flex-1 flex items-center justify-center"
         >
-          <div className="cyber-card p-12 text-center max-w-lg w-full border-[#00ffcc]/50">
-            <h1 className="text-5xl mb-2 font-display">
+          <div className="game-card-3d p-12 text-center max-w-lg w-full border-[#00ffcc]/50 bg-black/60 shadow-[0_0_50px_rgba(0,255,204,0.1)]">
+            <h1 className="text-6xl mb-4 font-display font-black tracking-widest">
               {playerHp > 0 ? (
-                <span className="text-[#00ffcc] glitch" data-text="VICTORY">VICTORY</span>
+                <span className="text-[#00ffcc] drop-shadow-[0_0_20px_#00ffcc] glitch" data-text="VICTORY">VICTORY</span>
               ) : (
-                <span className="text-[#ff0055] glitch" data-text="DEFEAT">DEFEAT</span>
+                <span className="text-[#ff0055] drop-shadow-[0_0_20px_#ff0055] glitch" data-text="DEFEAT">DEFEAT</span>
               )}
             </h1>
-            <p className="font-mono text-[#8a8a99] mb-8">
+            <p className="font-mono text-[#00ffcc] text-xl mb-8 bg-[#00ffcc]/10 py-2 rounded border border-[#00ffcc]/20">
               {playerHp > 0 ? '+24 ELO RATING GAINED' : '-18 ELO RATING LOST'}
             </p>
             
             <button 
               onClick={() => navigate('/dashboard')}
-              className="btn-neon w-full"
+              className="btn-action w-full mt-4"
             >
               RETURN TO HUB
             </button>

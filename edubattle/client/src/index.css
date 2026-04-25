@@ -196,9 +196,225 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.15));
   background-size: 100% 4px;
   pointer-events: none;
   z-index: 9999;
+  opacity: 0.4;
+  animation: scanlines-anim 10s linear infinite;
+}
+
+@keyframes scanlines-anim {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100vh; }
+}
+
+/* 3D Game Card */
+.game-card-3d {
+  background: var(--bg-panel);
+  backdrop-filter: blur(12px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+}
+
+.game-card-3d:hover {
+  transform: translateY(-10px) scale(1.02) rotateX(5deg) rotateY(5deg);
+  border-color: rgba(255, 255, 255, 0.3);
+  z-index: 10;
+}
+
+.game-card-3d::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: skewX(-20deg);
+  transition: all 0.5s ease;
+}
+
+.game-card-3d:hover::after {
+  left: 200%;
+}
+
+/* Game Title */
+.game-title {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  background: linear-gradient(to bottom, #ffffff, #8a8a99);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.5));
+  position: relative;
+}
+
+.game-title::before {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, var(--accent-primary), var(--accent-tertiary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transform: translate(4px, 4px);
+  filter: blur(4px);
+  opacity: 0.7;
+}
+
+/* Hexagon Pattern Background */
+.hex-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  background-color: var(--bg-primary);
+  background-image: radial-gradient(var(--bg-secondary) 15%, transparent 16%), radial-gradient(var(--bg-secondary) 15%, transparent 16%);
+  background-size: 60px 60px;
+  background-position: 0 0, 30px 30px;
   opacity: 0.3;
+  animation: scroll-hex 20s linear infinite;
+}
+
+@keyframes scroll-hex {
+  0% { background-position: 0 0, 30px 30px; }
+  100% { background-position: 60px 60px, 90px 90px; }
+}
+
+/* Grid overlay */
+.grid-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: linear-gradient(rgba(0, 255, 204, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 204, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: -1;
+  transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+  transform-origin: top;
+  animation: grid-move 5s linear infinite;
+}
+
+@keyframes grid-move {
+  0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); }
+  100% { transform: perspective(500px) rotateX(60deg) translateY(40px) translateZ(-200px); }
+}
+
+/* Action Button */
+.btn-action {
+  background: linear-gradient(45deg, var(--accent-primary), #00b38f);
+  color: #000;
+  font-family: var(--font-display);
+  font-weight: 800;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  box-shadow: 0 6px 0 #008066, 0 10px 20px rgba(0, 255, 204, 0.4);
+  transform: translateY(0);
+}
+
+.btn-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 #008066, 0 15px 25px rgba(0, 255, 204, 0.6);
+  filter: brightness(1.1);
+}
+
+.btn-action:active {
+  transform: translateY(6px);
+  box-shadow: 0 0 0 #008066, 0 5px 10px rgba(0, 255, 204, 0.4);
+}
+
+.btn-action-danger {
+  background: linear-gradient(45deg, var(--accent-secondary), #cc0044);
+  box-shadow: 0 6px 0 #990033, 0 10px 20px rgba(255, 0, 85, 0.4);
+}
+
+.btn-action-danger:hover {
+  box-shadow: 0 8px 0 #990033, 0 15px 25px rgba(255, 0, 85, 0.6);
+}
+
+.btn-action-danger:active {
+  box-shadow: 0 0 0 #990033, 0 5px 10px rgba(255, 0, 85, 0.4);
+}
+
+.btn-action-purple {
+  background: linear-gradient(45deg, var(--accent-tertiary), #6600cc);
+  box-shadow: 0 6px 0 #4d0099, 0 10px 20px rgba(162, 0, 255, 0.4);
+}
+
+.btn-action-purple:hover {
+  box-shadow: 0 8px 0 #4d0099, 0 15px 25px rgba(162, 0, 255, 0.6);
+}
+
+.btn-action-purple:active {
+  box-shadow: 0 0 0 #4d0099, 0 5px 10px rgba(162, 0, 255, 0.4);
+}
+
+/* Floating animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Health Bar Gaming Style */
+.gaming-hp-container {
+  width: 100%;
+  height: 24px;
+  background: #111;
+  border: 2px solid #333;
+  border-radius: 4px;
+  position: relative;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5);
+  transform: skewX(-15deg);
+}
+
+.gaming-hp-fill {
+  height: 100%;
+  transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.gaming-hp-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+}
+
+.hp-high { background: #00ffcc; box-shadow: 0 0 15px #00ffcc; }
+.hp-med { background: #ffcc00; box-shadow: 0 0 15px #ffcc00; }
+.hp-low { background: #ff0055; box-shadow: 0 0 15px #ff0055; animation: pulse-danger 1s infinite; }
+
+@keyframes pulse-danger {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
 }
