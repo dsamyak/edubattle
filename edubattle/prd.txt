@@ -1,0 +1,100 @@
+🎯
+1. Product Overview
+PRD § 1
+EduBattle Royale is a web-based competitive learning platform where students engage in real-time academic duels. Unlike traditional quiz apps, it fuses quiz knowledge with strategic decision-making — students must not only know the answer, but choose when and how to play it.
+
+The platform targets students aged 14–22 across school and college environments, gamifying revision sessions and making peer-to-peer learning inherently engaging.
+
+🔥
+2. Problem Statement
+PRD § 2
+Current Pain
+Existing EdTech tools are passive and solitary. Students use flashcard or quiz apps alone, with no social accountability or competitive pressure to drive deeper retention.
+
+Opportunity
+Games like Battlegrounds and Clash Royale have proven that real-time competition drives engagement for hours. EduBattle brings the same psychology to academics.
+
+📊
+3. Goals & Success Metrics
+PRD § 3
+Goal	Metric	Target
+Student Engagement	Avg. session duration	≥ 18 minutes
+Retention	D7 return rate	≥ 40%
+Knowledge Gain	Post-session quiz accuracy	+25% vs baseline
+Multiplayer Adoption	1v1 matches per day	≥ 200 on MVP launch
+Performance	Match latency (WebSocket)	< 100ms average
+👤
+4. User Personas
+PRD § 4
+The Competitor
+College student, 19. Thrives on leaderboards. Wants ranked 1v1 battles to prove academic dominance in their subject.
+
+The Studier
+High schooler, 16. Uses the platform to revise before exams. Prefers team mode with friends for social pressure.
+
+The Educator
+Teacher, 32. Runs classroom tournaments using custom question sets. Monitors performance dashboards per student.
+
+⚔
+5. Core Features (MVP)
+PRD § 5
+MODE 1 — 1V1 QUIZ DUEL
+
+Real-time matchmaking with ELO rating system
+Timed question rounds (10, 20, 30 second options)
+Answer confidence betting — wager points on each answer
+Live HP-style health bars depleted by wrong answers or slow responses
+Post-match stat review: accuracy, speed percentile, topic weaknesses
+MODE 2 — TEAM STRATEGY LEARNING
+
+2v2 or 3v3 team battles with subject specialisations per member
+Each player assigned a "role": Attacker, Defender, Support
+Team can vote to use power-ups (Skip, Hint Reveal, Double Points)
+Collaborative answer consensus round for bonus strategic questions
+MODE 3 — SPEED CHALLENGE
+
+Solo blitz mode: 50 questions, fastest correct time wins
+Global leaderboard updated in real-time
+Daily challenge with exclusive rewards for top 10
+💡
+6. Unique Twist — Strategy Layer
+PRD § 6
+Power Cards
+Students earn strategic cards via winning streaks: "Shield" blocks damage from one wrong answer, "Double Down" bets 2× points on a question, "Blackout" hides opponent's timer.
+
+Confidence Wagering
+Before each answer, players rate their confidence (Low / Med / High). High-confidence correct answers score 3×; wrong answers penalise accordingly. Metacognition as gameplay.
+
+Subject Deck Building
+Students curate their own question decks from a library. Entering a match with a focused deck gives a "Home Turf" bonus — rewarding preparation and specialization.
+
+Boss Raids
+Weekly 10-player cooperative battles against an AI "Knowledge Boss" — a sequence of increasingly hard questions requiring team coordination to defeat.
+
+🚫
+7. Out of Scope (v1)
+PRD § 7
+Native Mobile Apps
+AI Question Generation
+Video/Voice Chat
+Monetisation / Payments
+LMS Integration
+Cross-platform Sync
+🗓
+8. Internship Delivery Roadmap
+PRD § 8
+Week 1–2
+Research & Design — User interviews, wireframes, ERD, system design document
+Week 3–4
+Backend Core — Auth, user profiles, question bank API, WebSocket server skeleton
+Week 5–6
+1v1 Mode MVP — Matchmaking, real-time quiz duel, HP system, results screen
+Week 7–8
+Team & Speed Modes — Team rooms, role system, speed leaderboard, power cards
+Week 9–10
+Strategy Layer — Deck builder, confidence wagering, ELO ranking, boss raid
+Week 11–12
+QA & Submission — Bug fixes, performance testing, documentation, demo recording
+EduBattle Royale — PRD v1.0 & TRD v1.0
+Internship Submission · 2025
+Confidential · College Project

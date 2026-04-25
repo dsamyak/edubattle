@@ -1,0 +1,120 @@
+🛠
+1. Technology Stack
+TRD § 1
+Layer	Technology	Rationale
+Frontend	React 18 + Vite	Component reuse, fast HMR, ideal for real-time UI state
+Styling	Tailwind CSS + CSS Modules	Utility-first for speed, modules for scoped arena components
+State Management	Zustand	Lightweight, no boilerplate, works well with WebSocket events
+Real-time	Socket.io (WebSocket)	Reliable bidirectional events, auto-reconnect, room support
+Backend	Node.js + Express	Non-blocking I/O — critical for concurrent match sessions
+Database	PostgreSQL + Redis	Postgres for persistent data; Redis for match state & pub/sub
+Auth	JWT + bcrypt	Stateless auth, short-lived tokens, refresh token rotation
+ORM	Prisma	Type-safe DB queries, migrations, easy schema iteration
+Hosting	Vercel (FE) + Railway (BE)	Zero-config deploys, free tiers suitable for internship demo
+🏗
+2. System Architecture
+TRD § 2
+┌─────────────────────────────────────────────────┐
+│ CLIENT (React + Vite) │ PWA Shell │ Battle UI │
+└──────────────────┬──────────────────────────────┘
+                  │ REST API + Socket.io
+┌─────────────────────────────────────────────────┐
+│ API GATEWAY │ Auth Middleware │ Rate Limiter │
+└──────┬────────────────────┬────────────────────┘
+     │ REST             │ WebSocket
+┌──────▼──────┐    ┌──────▼──────────────┐
+│ REST Server │    │ Match Engine (WS) │
+│ Users, Q-Bank │   │ Rooms, Events, Timer │
+└──────┬──────┘    └──────┬──────────────┘
+       │                     │
+┌──────▼────────────────────▼──────────────────┐
+│ PostgreSQL (users, questions, history, ELO) │
+│ Redis (live match state, pub/sub, sessions) │
+└──────────────────────────────────────────────┘
+🗄
+3. Database Schema (Core Tables)
+TRD § 3
+Table	Key Fields	Purpose
+users	id, username, email, elo_rating, xp, avatar_url	Player identity & progression
+questions	id, subject, difficulty, body, options[], correct_idx, source	Question bank (seeded + user-uploaded)
+matches	id, mode, status, created_at, ended_at, winner_id	Match lifecycle tracking
+match_players	match_id, user_id, role, score, accuracy, cards_used	Per-player match stats
+decks	id, user_id, name, question_ids[], is_public	Custom question decks
+elo_history	user_id, match_id, old_elo, new_elo, delta, ts	Rating audit trail
+power_cards	id, user_id, card_type, earned_at, used_at	Strategic card inventory
+⚡
+4. WebSocket Event Protocol
+TRD § 4
+CLIENT → SERVER
+
+battle:join
+— join matchmaking queue
+battle:answer
+— submit answer + confidence
+battle:card_play
+— activate power card
+team:vote
+— team power-up vote
+battle:forfeit
+— surrender match
+SERVER → CLIENT
+
+battle:matched
+— opponent found, match start
+battle:question
+— push next question + timer
+battle:result
+— round outcome + HP update
+battle:ended
+— match over, final stats
+battle:sync
+— state sync on reconnect
+⚛
+5. React Frontend Architecture
+TRD § 5
+Module / Route	Key Components	State
+/lobby	ModeSelector, MatchmakingTimer, DeckPicker	matchStore (Zustand)
+/battle/1v1	QuestionCard, HPBar, ConfidenceSelector, OpponentPanel	battleStore, socket events
+/battle/team	TeamHUD, RoleCard, VotingModal, TeamChat	teamStore, socket events
+/battle/speed	BlitzTimer, QuestionStream, GlobalLeaderboard	local React state
+/profile	ELOGraph, MatchHistory, DeckManager, CardInventory	userStore (Zustand)
+/arena (teacher)	TournamentCreator, StudentProgress, LiveMonitor	adminStore (Zustand)
+React 18 Concurrent Mode
+Socket.io-client hooks
+Zustand stores
+React Router v6
+Framer Motion
+React Query
+📐
+6. ELO Rating Algorithm
+TRD § 6
+// Standard ELO — K-factor = 32 for students under 2100
+Expected = 1 / (1 + 10 ^ ((opponentElo - playerElo) / 400))
+newElo = playerElo + K × (actualScore - Expected)
+
+// actualScore: 1 = win, 0.5 = draw, 0 = loss
+// Speed bonus: +0.1 to actualScore if answered in top 20% time
+// Confidence multiplier: accuracy × confidence_weight → skill index
+🔒
+7. Security & Anti-Cheat
+TRD § 7
+All answers validated server-side — client never receives correct answer before submission
+JWT access tokens (15 min TTL) + HTTP-only refresh tokens (7 days)
+Socket events authenticated via JWT on every connection handshake
+Server-controlled question timer — client timer is display only, server rejects late submissions
+Rate limiting on answer events: max 1 answer per question per socket per round
+Input sanitisation via Zod on all REST endpoints and socket payloads
+📋
+8. Non-Functional Requirements
+TRD § 8
+Requirement	Specification
+Latency	WebSocket round-trip < 100ms on campus Wi-Fi
+Concurrency	Support 100 simultaneous matches (MVP target)
+Uptime	99% during demo/submission window
+Responsiveness	Works on Chrome/Firefox/Safari — desktop & tablet
+Accessibility	WCAG 2.1 AA for core game UI (keyboard nav, ARIA labels)
+Test Coverage	≥ 60% backend unit tests (Vitest), E2E for match flow (Playwright)
+Code Quality	ESLint + Prettier enforced in CI; typed with TypeScript strict mode
+EduBattle Royale — PRD v1.0 & TRD v1.0
+Internship Submission · 2025
+Confidential · College Project
