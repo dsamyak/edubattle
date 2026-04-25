@@ -8,83 +8,147 @@ const SpeedChallenge = () => {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(60); // 60 seconds for blitz
+  const [timeLeft, setTimeLeft] = useState(60);
   const [gameOver, setGameOver] = useState(false);
-  const [flashColor, setFlashColor] = useState(null); // for correct/incorrect flash
+  const [streak, setStreak] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
+  const [correct, setCorrect] = useState(0);
+  const [wrong, setWrong] = useState(0);
+  const [flash, setFlash] = useState(null);
 
-  useEffect(() => {
-    // We get 50 random questions for blitz mode
-    setQuestions(getRandomQuestions(50));
-  }, []);
+  useEffect(() => { setQuestions(getRandomQuestions(50)); }, []);
 
   useEffect(() => {
     if (gameOver || questions.length === 0) return;
-    
     if (timeLeft > 0) {
       const t = setTimeout(() => setTimeLeft(l => l - 1), 1000);
       return () => clearTimeout(t);
-    } else {
-      setGameOver(true);
-    }
+    } else { setGameOver(true); }
   }, [timeLeft, gameOver, questions]);
 
   const handleAnswer = (idx) => {
     const isCorrect = idx === questions[currentIndex].correct_idx;
-    
     if (isCorrect) {
-      setScore(s => s + 100);
-      setFlashColor('bg-[#00ffcc]/20');
+      const newStreak = streak + 1;
+      const bonus = newStreak >= 5 ? 50 : newStreak >= 3 ? 25 : 0;
+      setScore(s => s + 100 + bonus);
+      setStreak(newStreak);
+      setBestStreak(b => Math.max(b, newStreak));
+      setCorrect(c => c + 1);
+      setFlash('correct');
     } else {
-      setScore(s => Math.max(0, s - 50)); // Penalty for wrong
-      setFlashColor('bg-[#ff0055]/20');
+      setScore(s => Math.max(0, s - 50));
+      setStreak(0);
+      setWrong(w => w + 1);
+      setFlash('wrong');
     }
-
-    setTimeout(() => setFlashColor(null), 200);
-
-    if (currentIndex + 1 < questions.length) {
-      setCurrentIndex(i => i + 1);
-    } else {
-      setGameOver(true);
-    }
+    setTimeout(() => setFlash(null), 300);
+    if (currentIndex + 1 < questions.length) setCurrentIndex(i => i + 1);
+    else setGameOver(true);
   };
 
-  if (questions.length === 0) return <div>Loading...</div>;
+  if (questions.length === 0) return (
+    <div className="flex items-center justify-center h-[70vh]">
+      <div className="text-[#ff0055] font-[Orbitron] text-xl animate-pulse">LOADING BLITZ...</div>
+    </div>
+  );
+
+  const timerPct = (timeLeft / 60) * 100;
+  const q = questions[currentIndex];
 
   return (
-    <div className={`max-w-4xl mx-auto h-[80vh] flex flex-col transition-colors duration-200 ${flashColor || ''}`}>
+    <div className="max-w-5xl mx-auto flex flex-col gap-4" style={{ minHeight: 'calc(100vh - 120px)' }}>
+      {/* Flash overlay */}
+      <AnimatePresence>
+        {flash && (
+          <motion.div initial={{ opacity: 0.4 }} animate={{ opacity: 0 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className={`fixed inset-0 pointer-events-none z-40 ${flash === 'correct' ? 'bg-[#00ffcc]/10' : 'bg-[#ff0055]/10'}`} />
+        )}
+      </AnimatePresence>
+
       {!gameOver ? (
         <>
-          <div className="flex justify-between items-center mb-8 bg-black/60 p-4 border-2 border-[#ff0055]/30 rounded-lg shadow-[0_0_20px_rgba(255,0,85,0.1)]">
-            <div className="text-3xl font-display font-bold text-[#00ffcc] tracking-widest drop-shadow-[0_0_8px_#00ffcc]">SCORE: {score}</div>
-            <div className={`text-6xl font-mono font-black tracking-widest ${timeLeft <= 10 ? 'text-[#ff0055] animate-pulse drop-shadow-[0_0_15px_#ff0055]' : 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]'}`}>
-              00:{timeLeft.toString().padStart(2, '0')}
+          {/* HUD */}
+          <div className="bg-black/60 backdrop-blur-sm border border-[#ff0055]/20 rounded-xl p-4">
+            <div className="flex items-center justify-between gap-4">
+              {/* Score */}
+              <div className="text-center">
+                <div className="text-[9px] font-mono text-[#8a8a99] tracking-widest">SCORE</div>
+                <div className="text-2xl font-[Orbitron] font-bold text-[#00ffcc] drop-shadow-[0_0_8px_#00ffcc]">{score}</div>
+              </div>
+
+              {/* Streak */}
+              <div className="text-center">
+                <div className="text-[9px] font-mono text-[#8a8a99] tracking-widest">STREAK</div>
+                <div className={`text-xl font-[Orbitron] font-bold ${streak >= 5 ? 'text-[#ffcc00] animate-pulse' : streak >= 3 ? 'text-[#ff8800]' : 'text-white/60'}`}>
+                  {streak > 0 ? `${streak}🔥` : '—'}
+                </div>
+              </div>
+
+              {/* Timer */}
+              <div className="relative w-20 h-20">
+                <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="15" fill="none" stroke="#1a1a2e" strokeWidth="3" />
+                  <circle cx="18" cy="18" r="15" fill="none"
+                    stroke={timeLeft <= 10 ? '#ff0055' : timeLeft <= 20 ? '#ffcc00' : '#00ffcc'}
+                    strokeWidth="3" strokeDasharray={`${timerPct * 0.94} 100`}
+                    strokeLinecap="round" className="transition-all duration-1000" />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className={`font-mono font-black text-xl ${timeLeft <= 10 ? 'text-[#ff0055] animate-pulse' : 'text-white'}`}>{timeLeft}</span>
+                  <span className="text-[7px] text-[#8a8a99] font-mono">SEC</span>
+                </div>
+              </div>
+
+              {/* Progress */}
+              <div className="text-center">
+                <div className="text-[9px] font-mono text-[#8a8a99] tracking-widest">PROGRESS</div>
+                <div className="text-xl font-mono font-bold text-[#a200ff]">{currentIndex + 1}<span className="text-[#8a8a99] text-sm">/50</span></div>
+              </div>
+
+              {/* Accuracy */}
+              <div className="text-center">
+                <div className="text-[9px] font-mono text-[#8a8a99] tracking-widest">ACCURACY</div>
+                <div className="text-xl font-[Orbitron] font-bold text-white/80">
+                  {correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0}%
+                </div>
+              </div>
             </div>
-            <div className="text-xl font-mono font-bold text-[#a200ff] bg-[#a200ff]/20 px-4 py-2 rounded-lg border border-[#a200ff]/50">Q: {currentIndex + 1}/50</div>
+
+            {/* Timer bar */}
+            <div className="mt-3 w-full h-1 bg-black/50 rounded-full overflow-hidden">
+              <div className="h-full rounded-full transition-all duration-1000"
+                style={{ width: `${timerPct}%`, background: timeLeft <= 10 ? '#ff0055' : timeLeft <= 20 ? '#ffcc00' : '#00ffcc' }} />
+            </div>
           </div>
 
-          <div className="flex-1 flex flex-col">
+          {/* Question + Answers */}
+          <div className="flex-1 flex flex-col gap-4">
             <AnimatePresence mode="wait">
-              <motion.div 
-                key={currentIndex}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2 }}
-                className="flex-1 flex flex-col"
-              >
-                <div className="game-card-3d p-10 mb-8 flex-1 flex flex-col justify-center text-center bg-black/50 border-[#ff0055]/20 hover:border-[#ff0055]/50">
-                  <h2 className="text-3xl md:text-5xl font-bold leading-tight drop-shadow-lg">{questions[currentIndex].body}</h2>
+              <motion.div key={currentIndex}
+                initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
+                transition={{ duration: 0.15 }} className="flex-1 flex flex-col gap-4">
+
+                {/* Question */}
+                <div className="game-card-3d p-6 md:p-8 flex-1 flex flex-col justify-center text-center bg-black/40 border-[#ff0055]/20">
+                  <div className="text-[10px] font-mono text-[#ff0055] mb-3 tracking-widest flex items-center justify-center gap-2">
+                    <span className="px-2 py-0.5 bg-[#ff0055]/10 border border-[#ff0055]/30 rounded">{q.subject}</span>
+                    <span className="text-white/20">▸</span>
+                    <span className="text-[#8a8a99]">{q.topic}</span>
+                  </div>
+                  <h2 className="text-2xl md:text-4xl font-bold leading-tight font-[Space_Grotesk]">{q.body}</h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {questions[currentIndex].options.map((opt, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => handleAnswer(idx)}
-                      className="text-left p-6 rounded-lg border-2 border-white/10 hover:border-[#a200ff]/50 hover:bg-[#a200ff]/5 transition-all font-mono text-lg"
-                    >
-                      <span className="text-[#8a8a99] mr-4">{['A', 'B', 'C', 'D'][idx]}.</span>
-                      {opt}
+                {/* Options */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {q.options.map((opt, idx) => (
+                    <button key={idx} onClick={() => handleAnswer(idx)}
+                      className="text-left p-4 rounded-xl border-2 border-white/10 hover:border-[#a200ff]/40 hover:bg-[#a200ff]/5 transition-all bg-black/30 backdrop-blur-sm flex items-center gap-3">
+                      <span className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center font-[Orbitron] text-xs text-[#8a8a99] flex-shrink-0">
+                        {['A', 'B', 'C', 'D'][idx]}
+                      </span>
+                      <span className="font-[Rajdhani] text-base text-white/90">{opt}</span>
                     </button>
                   ))}
                 </div>
@@ -93,36 +157,36 @@ const SpeedChallenge = () => {
           </div>
         </>
       ) : (
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="flex-1 flex items-center justify-center"
-        >
-          <div className="game-card-3d p-12 text-center max-w-lg w-full border-[#ff0055]/50 bg-black/60 shadow-[0_0_50px_rgba(255,0,85,0.2)]">
-            <h1 className="text-6xl mb-6 font-display font-black text-[#ff0055] drop-shadow-[0_0_20px_#ff0055] glitch" data-text="TIME'S UP!">
-              TIME'S UP!
-            </h1>
-            <p className="font-mono text-3xl mb-10 bg-white/5 py-4 rounded border border-white/10">FINAL SCORE: <br/><span className="text-[#00ffcc] font-black text-5xl drop-shadow-[0_0_10px_#00ffcc] block mt-2">{score}</span></p>
-            
-            <div className="flex gap-4">
-              <button 
-                onClick={() => {
-                  setQuestions(getRandomQuestions(50));
-                  setCurrentIndex(0);
-                  setScore(0);
-                  setTimeLeft(60);
-                  setGameOver(false);
-                }}
-                className="btn-action flex-1"
-              >
-                RETRY
-              </button>
-              <button 
-                onClick={() => navigate('/dashboard')}
-                className="btn-action-purple flex-1"
-              >
-                HUB
-              </button>
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+          className="flex-1 flex items-center justify-center">
+          <div className="game-card-3d p-10 text-center max-w-md w-full border-[#ff0055]/30 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-[#ff0055]/5 to-transparent" />
+            <div className="relative z-10">
+              <div className="text-5xl mb-2">⚡</div>
+              <h1 className="text-4xl mb-2 font-[Orbitron] font-black text-[#ff0055] tracking-widest">TIME'S UP!</h1>
+
+              <div className="grid grid-cols-2 gap-3 my-6">
+                {[
+                  { label: 'SCORE', value: score, color: '#00ffcc' },
+                  { label: 'CORRECT', value: correct, color: '#00ffcc' },
+                  { label: 'WRONG', value: wrong, color: '#ff0055' },
+                  { label: 'BEST STREAK', value: `${bestStreak}🔥`, color: '#ffcc00' },
+                ].map(s => (
+                  <div key={s.label} className="bg-black/40 border border-white/10 rounded-lg p-3">
+                    <div className="text-[9px] font-mono text-[#8a8a99] tracking-widest">{s.label}</div>
+                    <div className="text-xl font-bold font-[Orbitron]" style={{ color: s.color }}>{s.value}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex gap-3">
+                <button onClick={() => {
+                  setQuestions(getRandomQuestions(50)); setCurrentIndex(0); setScore(0);
+                  setTimeLeft(60); setGameOver(false); setStreak(0); setBestStreak(0);
+                  setCorrect(0); setWrong(0);
+                }} className="btn-action flex-1 text-sm py-3">RETRY</button>
+                <button onClick={() => navigate('/dashboard')} className="btn-action-purple flex-1 text-sm py-3">HUB</button>
+              </div>
             </div>
           </div>
         </motion.div>
