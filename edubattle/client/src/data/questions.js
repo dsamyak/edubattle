@@ -1,259 +1,242 @@
 export const questionBank = [
   // --- Data Structures & Algorithms ---
   {
-    id: "q1",
-    subject: "Computer Science",
-    topic: "Data Structures & Algorithms",
-    difficulty: "Medium",
+    id: "q1", subject: "Computer Science", topic: "Data Structures & Algorithms", difficulty: "Medium",
     body: "What is the worst-case time complexity of QuickSort?",
-    options: ["O(n log n)", "O(n^2)", "O(n)", "O(log n)"],
-    correct_idx: 1,
-    explanation: "QuickSort's worst-case time complexity is O(n^2), which occurs when the pivot chosen is consistently the smallest or largest element."
+    options: ["O(n log n)", "O(n²)", "O(n)", "O(log n)"], correct_idx: 1,
+    explanation: "QuickSort's worst-case is O(n²), occurring when the pivot is consistently the smallest or largest element."
   },
   {
-    id: "q2",
-    subject: "Computer Science",
-    topic: "Data Structures & Algorithms",
-    difficulty: "Easy",
+    id: "q2", subject: "Computer Science", topic: "Data Structures & Algorithms", difficulty: "Easy",
     body: "Which data structure follows the Last-In-First-Out (LIFO) principle?",
-    options: ["Queue", "Linked List", "Stack", "Tree"],
-    correct_idx: 2,
-    explanation: "A Stack follows LIFO, meaning the last element added is the first one to be removed."
+    options: ["Queue", "Linked List", "Stack", "Tree"], correct_idx: 2,
+    explanation: "A Stack follows LIFO — the last element added is the first one removed."
   },
   {
-    id: "q3",
-    subject: "Computer Science",
-    topic: "Data Structures & Algorithms",
-    difficulty: "Hard",
-    body: "In a Red-Black Tree, what is the maximum height of the tree with n internal nodes?",
-    options: ["2 log(n + 1)", "log(n)", "n/2", "n log(n)"],
-    correct_idx: 0,
+    id: "q3", subject: "Computer Science", topic: "Data Structures & Algorithms", difficulty: "Hard",
+    body: "In a Red-Black Tree, what is the maximum height with n internal nodes?",
+    options: ["2 log(n + 1)", "log(n)", "n/2", "n log(n)"], correct_idx: 0,
     explanation: "A Red-Black tree with n internal nodes has height at most 2 log(n + 1)."
   },
   {
-    id: "q4",
-    subject: "Computer Science",
-    topic: "Data Structures & Algorithms",
-    difficulty: "Medium",
-    body: "Which algorithm is used to find the shortest path in a graph with non-negative edge weights?",
-    options: ["Depth First Search", "Kruskal's Algorithm", "Dijkstra's Algorithm", "Bellman-Ford Algorithm"],
-    correct_idx: 2,
-    explanation: "Dijkstra's algorithm finds the shortest path from a source node to all other nodes in a graph with non-negative weights."
+    id: "q4", subject: "Computer Science", topic: "Data Structures & Algorithms", difficulty: "Medium",
+    body: "Which algorithm finds the shortest path with non-negative edge weights?",
+    options: ["Depth First Search", "Kruskal's Algorithm", "Dijkstra's Algorithm", "Bellman-Ford"], correct_idx: 2,
+    explanation: "Dijkstra's algorithm finds the shortest path from a source to all other nodes with non-negative weights."
   },
-
-  // --- Programming Fundamentals ---
+  // --- Programming ---
   {
-    id: "q5",
-    subject: "Computer Science",
-    topic: "Programming Fundamentals",
-    difficulty: "Easy",
+    id: "q5", subject: "Computer Science", topic: "Programming", difficulty: "Easy",
     body: "What does OOP stand for?",
-    options: ["Object-Oriented Programming", "Only Output Process", "Operational Open Protocol", "Overloaded Operator Pattern"],
-    correct_idx: 0,
-    explanation: "OOP stands for Object-Oriented Programming, a paradigm based on the concept of 'objects'."
+    options: ["Object-Oriented Programming", "Only Output Process", "Operational Open Protocol", "Overloaded Operator Pattern"], correct_idx: 0,
+    explanation: "OOP stands for Object-Oriented Programming."
   },
   {
-    id: "q6",
-    subject: "Computer Science",
-    topic: "Programming Fundamentals",
-    difficulty: "Medium",
-    body: "Which of the following is NOT a pillar of Object-Oriented Programming?",
-    options: ["Inheritance", "Polymorphism", "Encapsulation", "Compilation"],
-    correct_idx: 3,
-    explanation: "Compilation is a step in translating code to machine language, not an OOP concept. The 4 pillars are Abstraction, Encapsulation, Inheritance, and Polymorphism."
+    id: "q6", subject: "Computer Science", topic: "Programming", difficulty: "Medium",
+    body: "Which is NOT a pillar of Object-Oriented Programming?",
+    options: ["Inheritance", "Polymorphism", "Encapsulation", "Compilation"], correct_idx: 3,
+    explanation: "The 4 pillars are Abstraction, Encapsulation, Inheritance, and Polymorphism."
   },
-  {
-    id: "q7",
-    subject: "Computer Science",
-    topic: "Programming Fundamentals",
-    difficulty: "Hard",
-    body: "In languages like C++ or Java, what is the purpose of the 'volatile' keyword?",
-    options: ["To prevent the variable from being modified", "To indicate the variable may be modified by an external thread/hardware unexpectedly", "To optimize the variable for faster CPU cache access", "To automatically garbage collect the variable"],
-    correct_idx: 1,
-    explanation: "'volatile' tells the compiler that the variable's value can change at any time without any action being taken by the code the compiler finds nearby, preventing certain optimizations."
-  },
-
   // --- Networking ---
   {
-    id: "q8",
-    subject: "Computer Science",
-    topic: "Networking",
-    difficulty: "Easy",
+    id: "q7", subject: "Computer Science", topic: "Networking", difficulty: "Easy",
     body: "What does HTTP stand for?",
-    options: ["HyperText Transfer Protocol", "Hyperlink Transfer Technology", "HyperText Transmission Process", "HyperText Test Protocol"],
-    correct_idx: 0,
+    options: ["HyperText Transfer Protocol", "Hyperlink Transfer Technology", "HyperText Transmission Process", "HyperText Test Protocol"], correct_idx: 0,
     explanation: "HTTP stands for HyperText Transfer Protocol."
   },
   {
-    id: "q9",
-    subject: "Computer Science",
-    topic: "Networking",
-    difficulty: "Medium",
-    body: "Which layer of the OSI model is responsible for routing packets across networks?",
-    options: ["Transport Layer", "Network Layer", "Data Link Layer", "Application Layer"],
-    correct_idx: 1,
-    explanation: "The Network Layer (Layer 3) handles routing and logical addressing (e.g., IP)."
+    id: "q8", subject: "Computer Science", topic: "Networking", difficulty: "Medium",
+    body: "Which OSI layer is responsible for routing packets across networks?",
+    options: ["Transport Layer", "Network Layer", "Data Link Layer", "Application Layer"], correct_idx: 1,
+    explanation: "The Network Layer (Layer 3) handles routing and logical addressing."
+  },
+  // --- Science ---
+  {
+    id: "q9", subject: "Science", topic: "Physics", difficulty: "Easy",
+    body: "What is the SI unit of force?",
+    options: ["Joule", "Watt", "Newton", "Pascal"], correct_idx: 2,
+    explanation: "The Newton (N) is the SI unit of force, defined as kg·m/s²."
   },
   {
-    id: "q10",
-    subject: "Computer Science",
-    topic: "Networking",
-    difficulty: "Hard",
-    body: "In the TCP 3-way handshake, what is the sequence of flags exchanged?",
-    options: ["SYN, ACK, SYN-ACK", "SYN, SYN-ACK, ACK", "ACK, SYN-ACK, SYN", "SYN, FIN, ACK"],
-    correct_idx: 1,
-    explanation: "The initiator sends SYN, the receiver replies with SYN-ACK, and the initiator acknowledges with ACK."
-  },
-
-  // --- Operating Systems ---
-  {
-    id: "q11",
-    subject: "Computer Science",
-    topic: "Operating Systems",
-    difficulty: "Medium",
-    body: "What is a 'race condition'?",
-    options: ["When two threads are waiting for each other indefinitely", "When a process consumes all CPU resources", "When the output depends on the unpredictable sequence of execution of threads/processes", "When a process terminates unexpectedly"],
-    correct_idx: 2,
-    explanation: "A race condition occurs when concurrent threads access shared data and the final outcome depends on the timing of their execution."
+    id: "q10", subject: "Science", topic: "Physics", difficulty: "Medium",
+    body: "What is the speed of light in a vacuum (approx)?",
+    options: ["3 × 10⁶ m/s", "3 × 10⁸ m/s", "3 × 10¹⁰ m/s", "3 × 10⁴ m/s"], correct_idx: 1,
+    explanation: "The speed of light in a vacuum is approximately 3 × 10⁸ meters per second."
   },
   {
-    id: "q12",
-    subject: "Computer Science",
-    topic: "Operating Systems",
-    difficulty: "Easy",
-    body: "Which OS component is responsible for managing hardware resources?",
-    options: ["The Shell", "The Kernel", "The Compiler", "The GUI"],
-    correct_idx: 1,
-    explanation: "The Kernel is the core component of an OS that manages CPU, memory, and peripheral devices."
+    id: "q11", subject: "Science", topic: "Chemistry", difficulty: "Easy",
+    body: "What is the chemical symbol for Gold?",
+    options: ["Go", "Gd", "Au", "Ag"], correct_idx: 2,
+    explanation: "Gold's chemical symbol Au comes from the Latin word 'Aurum'."
   },
   {
-    id: "q13",
-    subject: "Computer Science",
-    topic: "Operating Systems",
-    difficulty: "Hard",
-    body: "Which of the following is a condition required for a deadlock to occur (Coffman conditions)?",
-    options: ["Preemption", "Circular Wait", "Sharable Resources", "Multithreading"],
-    correct_idx: 1,
-    explanation: "The 4 Coffman conditions for deadlock are: Mutual Exclusion, Hold and Wait, No Preemption, and Circular Wait."
-  },
-
-  // --- Databases ---
-  {
-    id: "q14",
-    subject: "Computer Science",
-    topic: "Databases",
-    difficulty: "Easy",
-    body: "What does SQL stand for?",
-    options: ["Simple Query Language", "Structured Question Language", "Structured Query Language", "System Query Logic"],
-    correct_idx: 2,
-    explanation: "SQL stands for Structured Query Language."
+    id: "q12", subject: "Science", topic: "Chemistry", difficulty: "Medium",
+    body: "What is the pH of a neutral solution?",
+    options: ["0", "7", "14", "1"], correct_idx: 1,
+    explanation: "A neutral solution has a pH of 7. Below 7 is acidic, above 7 is basic."
   },
   {
-    id: "q15",
-    subject: "Computer Science",
-    topic: "Databases",
-    difficulty: "Medium",
-    body: "In database transactions, what does the 'I' in ACID stand for?",
-    options: ["Integrity", "Isolation", "Index", "Idempotence"],
-    correct_idx: 1,
-    explanation: "ACID stands for Atomicity, Consistency, Isolation, and Durability."
+    id: "q13", subject: "Science", topic: "Biology", difficulty: "Easy",
+    body: "What is the powerhouse of the cell?",
+    options: ["Nucleus", "Ribosome", "Mitochondria", "Golgi Apparatus"], correct_idx: 2,
+    explanation: "Mitochondria generate most of the cell's ATP (energy currency)."
   },
-
-  // --- Web Development ---
+  // --- Geography ---
   {
-    id: "q16",
-    subject: "Computer Science",
-    topic: "Web Development",
-    difficulty: "Medium",
-    body: "What is the purpose of Cross-Origin Resource Sharing (CORS)?",
-    options: ["To prevent SQL injection", "To allow restricted resources on a web page to be requested from another domain", "To encrypt HTTP traffic", "To speed up page loading via CDN"],
-    correct_idx: 1,
-    explanation: "CORS is a mechanism that allows restricted resources on a web page to be requested from another domain outside the domain from which the first resource was served."
+    id: "q14", subject: "Geography", topic: "World", difficulty: "Easy",
+    body: "What is the largest ocean on Earth?",
+    options: ["Atlantic", "Indian", "Arctic", "Pacific"], correct_idx: 3,
+    explanation: "The Pacific Ocean covers about 63 million square miles."
   },
   {
-    id: "q17",
-    subject: "Computer Science",
-    topic: "Web Development",
-    difficulty: "Easy",
-    body: "Which HTML tag is used to reference an external JavaScript file?",
-    options: ["<script>", "<link>", "<js>", "<javascript>"],
-    correct_idx: 0,
-    explanation: "The <script> tag, typically with the 'src' attribute, is used to include external JavaScript."
+    id: "q15", subject: "Geography", topic: "World", difficulty: "Medium",
+    body: "Which country has the most time zones?",
+    options: ["Russia", "USA", "China", "France"], correct_idx: 3,
+    explanation: "France has 12 time zones due to its overseas territories."
+  },
+  // --- English ---
+  {
+    id: "q16", subject: "English", topic: "Vocabulary", difficulty: "Medium",
+    body: "What does 'ephemeral' mean?",
+    options: ["Eternal", "Lasting a very short time", "Extremely large", "Very old"], correct_idx: 1,
+    explanation: "Ephemeral means lasting for a very short time."
   },
   {
-    id: "q18",
-    subject: "Computer Science",
-    topic: "Web Development",
-    difficulty: "Hard",
-    body: "What is 'event delegation' in JavaScript?",
-    options: ["A way to assign multiple events to one element", "Passing events from server to client via WebSockets", "Attaching a single event listener to a parent element to manage events for its children", "Preventing the default action of an event"],
-    correct_idx: 2,
-    explanation: "Event delegation leverages event bubbling to handle events on multiple child elements via a single listener attached to their common ancestor."
-  }
+    id: "q17", subject: "English", topic: "Grammar", difficulty: "Easy",
+    body: "Which is the correct spelling?",
+    options: ["Accomodate", "Accommodate", "Acommodate", "Acomodate"], correct_idx: 1,
+    explanation: "Accommodate has two c's and two m's."
+  },
 ];
 
-export const generateDynamicMathQuestion = () => {
-  const operations = ['+', '-', '*'];
-  const op = operations[Math.floor(Math.random() * operations.length)];
-  let num1, num2, answer;
-  let difficulty = "Easy";
-  
-  if (op === '+') {
-    num1 = Math.floor(Math.random() * 100) + 20;
-    num2 = Math.floor(Math.random() * 100) + 20;
-    answer = num1 + num2;
-  } else if (op === '-') {
-    num1 = Math.floor(Math.random() * 100) + 50;
-    num2 = Math.floor(Math.random() * num1);
-    answer = num1 - num2;
-  } else {
-    num1 = Math.floor(Math.random() * 12) + 2;
-    num2 = Math.floor(Math.random() * 12) + 2;
-    answer = num1 * num2;
-    difficulty = "Medium";
-  }
+// --- Dynamic Question Generators ---
 
-  // Generate 3 wrong options
-  const wrong1 = answer + Math.floor(Math.random() * 10) + 1;
-  const wrong2 = answer - Math.floor(Math.random() * 10) - 1;
-  const wrong3 = answer + (Math.random() > 0.5 ? 10 : -10);
-  
-  let options = [answer, wrong1, wrong2, wrong3];
-  
-  // Shuffle options
-  for (let i = options.length - 1; i > 0; i--) {
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [options[i], options[j]] = [options[j], options[i]];
+    [a[i], a[j]] = [a[j], a[i]];
   }
-  
-  const correct_idx = options.indexOf(answer);
+  return a;
+}
 
+function makeOptions(answer, generateWrong) {
+  const wrongs = generateWrong(answer);
+  let opts = [answer, ...wrongs.slice(0, 3)];
+  opts = shuffle(opts);
+  return { options: opts.map(String), correct_idx: opts.indexOf(answer) };
+}
+
+function generateMathQuestion() {
+  const templates = [
+    () => {
+      const a = Math.floor(Math.random() * 80) + 20;
+      const b = Math.floor(Math.random() * 80) + 20;
+      return { body: `What is ${a} + ${b}?`, answer: a + b, topic: "Arithmetic", diff: "Easy" };
+    },
+    () => {
+      const a = Math.floor(Math.random() * 80) + 50;
+      const b = Math.floor(Math.random() * 40) + 10;
+      return { body: `What is ${a} − ${b}?`, answer: a - b, topic: "Arithmetic", diff: "Easy" };
+    },
+    () => {
+      const a = Math.floor(Math.random() * 12) + 2;
+      const b = Math.floor(Math.random() * 12) + 2;
+      return { body: `What is ${a} × ${b}?`, answer: a * b, topic: "Multiplication", diff: "Medium" };
+    },
+    () => {
+      const b = Math.floor(Math.random() * 10) + 2;
+      const answer = Math.floor(Math.random() * 15) + 2;
+      const a = b * answer;
+      return { body: `What is ${a} ÷ ${b}?`, answer, topic: "Division", diff: "Medium" };
+    },
+    () => {
+      const base = Math.floor(Math.random() * 10) + 2;
+      return { body: `What is ${base}² ?`, answer: base * base, topic: "Powers", diff: "Medium" };
+    },
+    () => {
+      const n = Math.floor(Math.random() * 8) + 2;
+      const pct = [10, 20, 25, 50][Math.floor(Math.random() * 4)];
+      const val = n * (100 / pct);
+      return { body: `What is ${pct}% of ${val}?`, answer: n * (pct === 10 ? 10 : pct === 20 ? 5 : pct === 25 ? 4 : 2), topic: "Percentages", diff: "Hard" };
+    },
+  ];
+  const t = templates[Math.floor(Math.random() * templates.length)]();
+  const { options, correct_idx } = makeOptions(t.answer, (ans) => [ans + Math.floor(Math.random() * 8) + 1, ans - Math.floor(Math.random() * 8) - 1, ans + (Math.random() > 0.5 ? 12 : -12)]);
   return {
-    id: `dyn_${Date.now()}_${Math.floor(Math.random()*1000)}`,
-    subject: "Mathematics",
-    topic: "Mental Arithmetic",
-    difficulty,
-    body: `What is the result of: ${num1} ${op} ${num2}?`,
-    options: options.map(String),
-    correct_idx,
-    explanation: `The correct calculation is ${num1} ${op} ${num2} = ${answer}.`
+    id: `dyn_math_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+    subject: "Mathematics", topic: t.topic, difficulty: t.diff,
+    body: t.body, options, correct_idx,
+    explanation: `The correct answer is ${t.answer}.`
   };
-};
+}
+
+function generateScienceQuestion() {
+  const pool = [
+    { body: "What planet is known as the Red Planet?", options: ["Venus", "Mars", "Jupiter", "Saturn"], ci: 1, topic: "Astronomy", diff: "Easy", exp: "Mars appears red due to iron oxide on its surface." },
+    { body: "How many bones are in the adult human body?", options: ["196", "206", "216", "186"], ci: 1, topic: "Biology", diff: "Medium", exp: "An adult human has 206 bones." },
+    { body: "What gas do plants absorb from the atmosphere?", options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"], ci: 2, topic: "Biology", diff: "Easy", exp: "Plants absorb CO₂ for photosynthesis." },
+    { body: "What is the hardest natural substance?", options: ["Quartz", "Topaz", "Diamond", "Sapphire"], ci: 2, topic: "Chemistry", diff: "Easy", exp: "Diamond is the hardest natural substance (10 on Mohs scale)." },
+    { body: "What is the chemical formula for water?", options: ["HO₂", "H₂O", "OH", "H₃O"], ci: 1, topic: "Chemistry", diff: "Easy", exp: "Water is H₂O — two hydrogen atoms and one oxygen atom." },
+    { body: "Which element has the atomic number 1?", options: ["Helium", "Lithium", "Hydrogen", "Carbon"], ci: 2, topic: "Chemistry", diff: "Easy", exp: "Hydrogen has atomic number 1." },
+    { body: "What force keeps us on the ground?", options: ["Magnetism", "Friction", "Gravity", "Inertia"], ci: 2, topic: "Physics", diff: "Easy", exp: "Gravity is the force that attracts objects toward Earth." },
+    { body: "What is absolute zero in Celsius?", options: ["-273.15°C", "-100°C", "0°C", "-459.67°C"], ci: 0, topic: "Physics", diff: "Hard", exp: "Absolute zero is -273.15°C (0 Kelvin)." },
+  ];
+  const q = pool[Math.floor(Math.random() * pool.length)];
+  return {
+    id: `dyn_sci_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+    subject: "Science", topic: q.topic, difficulty: q.diff,
+    body: q.body, options: q.options, correct_idx: q.ci, explanation: q.exp
+  };
+}
+
+function generateGeoQuestion() {
+  const pool = [
+    { body: "What is the capital of Japan?", options: ["Seoul", "Beijing", "Tokyo", "Bangkok"], ci: 2, exp: "Tokyo is the capital of Japan." },
+    { body: "Which is the longest river in the world?", options: ["Amazon", "Nile", "Yangtze", "Mississippi"], ci: 1, exp: "The Nile is approximately 6,650 km long." },
+    { body: "What is the smallest country in the world?", options: ["Monaco", "Vatican City", "San Marino", "Liechtenstein"], ci: 1, exp: "Vatican City is the smallest country at 0.44 km²." },
+    { body: "On which continent is the Sahara Desert?", options: ["Asia", "South America", "Africa", "Australia"], ci: 2, exp: "The Sahara Desert is in northern Africa." },
+    { body: "What is the capital of Australia?", options: ["Sydney", "Melbourne", "Canberra", "Brisbane"], ci: 2, exp: "Canberra is the capital of Australia, not Sydney." },
+    { body: "Which mountain is the tallest in the world?", options: ["K2", "Kangchenjunga", "Mount Everest", "Lhotse"], ci: 2, exp: "Mount Everest stands at 8,849 meters." },
+  ];
+  const q = pool[Math.floor(Math.random() * pool.length)];
+  return {
+    id: `dyn_geo_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+    subject: "Geography", topic: "World", difficulty: "Medium",
+    body: q.body, options: q.options, correct_idx: q.ci, explanation: q.exp
+  };
+}
+
+function generateCSQuestion() {
+  const pool = [
+    { body: "What does HTML stand for?", options: ["Hyper Trainer Marking Language", "HyperText Markup Language", "HyperText Marketing Language", "HyperTool Multi Language"], ci: 1, topic: "Web", diff: "Easy", exp: "HTML = HyperText Markup Language." },
+    { body: "Which data structure uses FIFO?", options: ["Stack", "Queue", "Tree", "Graph"], ci: 1, topic: "Data Structures", diff: "Easy", exp: "Queue uses First-In-First-Out ordering." },
+    { body: "What does CPU stand for?", options: ["Central Process Unit", "Central Processing Unit", "Computer Personal Unit", "Central Processor Utility"], ci: 1, topic: "Hardware", diff: "Easy", exp: "CPU = Central Processing Unit." },
+    { body: "What is Big O of binary search?", options: ["O(n)", "O(n²)", "O(log n)", "O(1)"], ci: 2, topic: "Algorithms", diff: "Medium", exp: "Binary search halves the search space each step → O(log n)." },
+    { body: "Which protocol is used for secure web browsing?", options: ["HTTP", "FTP", "HTTPS", "SMTP"], ci: 2, topic: "Networking", diff: "Easy", exp: "HTTPS adds TLS/SSL encryption to HTTP." },
+    { body: "What is a 'segmentation fault'?", options: ["Syntax error", "Memory access violation", "Network timeout", "Type mismatch"], ci: 1, topic: "Systems", diff: "Hard", exp: "A segfault occurs when a program accesses memory it's not allowed to." },
+  ];
+  const q = pool[Math.floor(Math.random() * pool.length)];
+  return {
+    id: `dyn_cs_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+    subject: "Computer Science", topic: q.topic, difficulty: q.diff,
+    body: q.body, options: q.options, correct_idx: q.ci, explanation: q.exp
+  };
+}
+
+const dynamicGenerators = [generateMathQuestion, generateScienceQuestion, generateGeoQuestion, generateCSQuestion];
 
 export const getRandomQuestions = (count) => {
   const questions = [];
-  
-  // Mix static and dynamic questions
-  const shuffledStatic = [...questionBank].sort(() => 0.5 - Math.random());
-  
+  const shuffledStatic = shuffle(questionBank);
+
   for (let i = 0; i < count; i++) {
-    // 50% chance of dynamic math question, or if we run out of static questions
-    if (Math.random() > 0.5 || shuffledStatic.length === 0) {
-      questions.push(generateDynamicMathQuestion());
+    if (Math.random() > 0.4 || shuffledStatic.length === 0) {
+      const gen = dynamicGenerators[Math.floor(Math.random() * dynamicGenerators.length)];
+      questions.push(gen());
     } else {
       questions.push(shuffledStatic.pop());
     }
   }
-  
   return questions;
 };
