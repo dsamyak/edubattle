@@ -15,6 +15,15 @@ const BattleComputer = () => {
   const [gameOver, setGameOver] = useState(false);
   const [combo, setCombo] = useState(0);
 
+  // Match Stats
+  const [matchStats, setMatchStats] = useState({
+    correctAnswers: 0,
+    wrongAnswers: 0,
+    maxCombo: 0,
+    damageDealt: 0,
+    timeOuts: 0
+  });
+
   useEffect(() => {
     setQuestions(getRandomQuestions(10));
     return () => resetBattle();
@@ -52,9 +61,11 @@ const BattleComputer = () => {
              setRoundResult('loss');
              setCombo(0);
              takeDamage(baseDmg);
+             setMatchStats(s => ({ ...s, timeOuts: s.timeOuts + 1 }));
           } else {
              // AI wrong, player didn't answer -> draw
              setRoundResult('draw');
+             setMatchStats(s => ({ ...s, timeOuts: s.timeOuts + 1 }));
           }
           finishRound();
        }
@@ -65,7 +76,11 @@ const BattleComputer = () => {
 
 
   const handleTimeOut = () => {
-    setRoundResult('loss'); setCombo(0); takeDamage(10); finishRound();
+    setRoundResult('loss'); 
+    setCombo(0); 
+    takeDamage(10); 
+    setMatchStats(s => ({ ...s, timeOuts: s.timeOuts + 1 }));
+    finishRound();
   };
 
   const handleAnswer = (idx) => {
@@ -81,13 +96,20 @@ const BattleComputer = () => {
     const baseDmg = 15;
 
     if (isCorrect && !opCorrect) {
-      setRoundResult('win'); setCombo(c => c + 1); dealDamage(baseDmg * mult);
+      setRoundResult('win'); 
+      setCombo(c => { const newC = c + 1; setMatchStats(s => ({...s, maxCombo: Math.max(s.maxCombo, newC)})); return newC; }); 
+      dealDamage(baseDmg * mult);
+      setMatchStats(s => ({ ...s, correctAnswers: s.correctAnswers + 1, damageDealt: s.damageDealt + (baseDmg * mult) }));
     } else if (!isCorrect && opCorrect) {
       setRoundResult('loss'); setCombo(0); takeDamage(baseDmg * mult);
+      setMatchStats(s => ({ ...s, wrongAnswers: s.wrongAnswers + 1 }));
     } else if (isCorrect && opCorrect) {
-      setRoundResult('draw'); setCombo(c => c + 1);
+      setRoundResult('draw'); 
+      setCombo(c => { const newC = c + 1; setMatchStats(s => ({...s, maxCombo: Math.max(s.maxCombo, newC)})); return newC; });
+      setMatchStats(s => ({ ...s, correctAnswers: s.correctAnswers + 1 }));
     } else {
       setRoundResult('loss'); setCombo(0); takeDamage(baseDmg * mult * 0.5);
+      setMatchStats(s => ({ ...s, wrongAnswers: s.wrongAnswers + 1 }));
     }
     finishRound();
   };
@@ -248,25 +270,62 @@ const BattleComputer = () => {
         </div>
       ) : (
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-          className="flex-1 flex items-center justify-center">
-          <div className="game-card-3d p-10 text-center max-w-md w-full relative overflow-hidden"
+          className="flex-1 flex items-center justify-center py-8">
+          <div className="game-card-3d p-8 text-center max-w-2xl w-full relative overflow-hidden"
             style={{ borderColor: playerHp > 0 ? '#00ffcc50' : '#ff005550' }}>
             <div className="absolute inset-0 opacity-10"
               style={{ background: `radial-gradient(circle, ${playerHp > 0 ? '#00ffcc' : '#ff0055'}, transparent)` }} />
             <div className="relative z-10">
               <div className="text-6xl mb-2">{playerHp > 0 ? '🏆' : '💀'}</div>
-              <h1 className="text-4xl md:text-5xl mb-3 font-[Orbitron] font-black tracking-widest"
+              <h1 className="text-4xl md:text-5xl mb-1 font-[Orbitron] font-black tracking-widest"
                 style={{ color: playerHp > 0 ? '#00ffcc' : '#ff0055' }}>
                 {playerHp > 0 ? 'VICTORY' : 'DEFEAT'}
               </h1>
-              <p className="font-mono text-sm mb-6 py-2 rounded border border-white/10 bg-black/30"
+              <p className="font-mono text-sm mb-8 py-2 rounded border border-white/10 bg-black/30 inline-block px-4"
                 style={{ color: playerHp > 0 ? '#00ffcc' : '#ff0055' }}>
-                {playerHp > 0 ? 'AI DEFEATED' : 'AI PREVAILED'}
+                {playerHp > 0 ? 'AI DEFEATED - SIMULATION COMPLETE' : 'AI PREVAILED - SIMULATION FAILED'}
               </p>
-              <div className="flex gap-3">
-                <button onClick={() => { resetBattle(); setQuestions(getRandomQuestions(10)); setGameOver(false); setTimeLeft(20); }}
-                  className="btn-action flex-1 text-sm py-3">REMATCH</button>
-                <button onClick={() => navigate('/dashboard')} className="btn-action-purple flex-1 text-sm py-3">HUB</button>
+
+              {/* Match Overview Stats */}
+              <div className="bg-black/40 border border-white/10 rounded-xl p-6 mb-8 text-left">
+                <h3 className="font-[Orbitron] text-white/80 text-sm tracking-widest mb-4 border-b border-white/10 pb-2 flex items-center gap-2">
+                  <span className="text-[#a200ff]">📊</span> POST-MATCH ANALYSIS
+                </h3>
+                
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="bg-black/50 p-3 rounded border border-white/5">
+                    <div className="text-[10px] font-mono text-[#8a8a99]">ACCURACY</div>
+                    <div className="text-xl font-[Orbitron] text-[#00ffcc] font-bold">
+                      {Math.max(1, matchStats.correctAnswers + matchStats.wrongAnswers) > 1 
+                        ? Math.round((matchStats.correctAnswers / (matchStats.correctAnswers + matchStats.wrongAnswers)) * 100) 
+                        : 0}%
+                    </div>
+                  </div>
+                  <div className="bg-black/50 p-3 rounded border border-white/5">
+                    <div className="text-[10px] font-mono text-[#8a8a99]">MAX COMBO</div>
+                    <div className="text-xl font-[Orbitron] text-[#ffcc00] font-bold">{matchStats.maxCombo}x</div>
+                  </div>
+                  <div className="bg-black/50 p-3 rounded border border-white/5">
+                    <div className="text-[10px] font-mono text-[#8a8a99]">DMG DEALT</div>
+                    <div className="text-xl font-[Orbitron] text-[#ff0055] font-bold">{Math.round(matchStats.damageDealt)}</div>
+                  </div>
+                  <div className="bg-black/50 p-3 rounded border border-white/5">
+                    <div className="text-[10px] font-mono text-[#8a8a99]">TIMEOUTS</div>
+                    <div className="text-xl font-[Orbitron] text-white/60 font-bold">{matchStats.timeOuts}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-4 max-w-md mx-auto">
+                <button onClick={() => { 
+                  resetBattle(); 
+                  setQuestions(getRandomQuestions(10)); 
+                  setGameOver(false); 
+                  setTimeLeft(20); 
+                  setMatchStats({ correctAnswers: 0, wrongAnswers: 0, maxCombo: 0, damageDealt: 0, timeOuts: 0 });
+                }}
+                  className="btn-action flex-1 text-sm py-4">REMATCH AI</button>
+                <button onClick={() => navigate('/dashboard')} className="btn-action-purple flex-1 text-sm py-4">RETURN TO HUB</button>
               </div>
             </div>
           </div>
