@@ -65,6 +65,25 @@ const Auth = () => {
     }
   };
 
+  const handleDevLogin = () => {
+    login({ uid: 'dev-user-123', email: 'dev@edubattle.local', displayName: 'DevMaster' }, {
+      uid: 'dev-user-123',
+      username: 'DevMaster',
+      email: 'dev@edubattle.local',
+      playerId: 'DEV123',
+      elo: 1500,
+      xp: 5000,
+      level: 5,
+      wins: 10,
+      losses: 2,
+      streak: 3,
+      gamesPlayed: 12,
+      avatar: 'DM',
+      createdAt: Date.now()
+    });
+    navigate('/dashboard');
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center relative z-10 p-4">
       <motion.div 
@@ -147,7 +166,7 @@ const Auth = () => {
         <button 
           onClick={handleGoogleSignIn}
           disabled={loading}
-          className="w-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-white font-[Rajdhani] font-bold p-3 rounded transition-all flex items-center justify-center gap-3"
+          className="w-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-white font-[Rajdhani] font-bold p-3 rounded transition-all flex items-center justify-center gap-3 mb-4"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -156,6 +175,15 @@ const Auth = () => {
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
           </svg>
           GOOGLE UPLINK
+        </button>
+
+        <button 
+          onClick={handleDevLogin}
+          disabled={loading}
+          className="w-full bg-[#ffcc00]/10 border border-[#ffcc00]/30 hover:bg-[#ffcc00]/20 hover:border-[#ffcc00]/50 text-[#ffcc00] font-[Orbitron] font-bold tracking-widest p-3 rounded transition-all flex items-center justify-center gap-3"
+        >
+          <span className="text-xl">⚠️</span>
+          DEV OVERRIDE (BYPASS AUTH)
         </button>
 
         <div className="mt-6 text-center">
