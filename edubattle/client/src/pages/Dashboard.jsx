@@ -1,22 +1,23 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useUserStore } from '../stores/useUserStore';
+import { useAuthStore } from '../stores/useAuthStore';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user } = useUserStore();
+  const { profile } = useAuthStore();
 
   const modes = [
-    { id: '1v1', title: '1V1 DUEL', desc: 'Ranked matchmaking. Wage confidence, destroy your opponent.', color: '#00ffcc', icon: '⚔️', badge: 'RANKED' },
-    { id: 'team', title: 'TEAM BATTLE', desc: '3v3 strategic warfare. Assign roles, vote on powerups.', color: '#a200ff', icon: '👥', badge: 'COMING SOON' },
-    { id: 'speed', title: 'BLITZ MODE', desc: '50 questions in 60 seconds. Race the clock for leaderboard glory.', color: '#ff0055', icon: '⚡', badge: 'SOLO' },
+    { id: '1v1', title: '1V1 DUEL', desc: 'Ranked matchmaking. Wage confidence, destroy your opponent.', color: '#00ffcc', icon: '⚔️', badge: 'RANKED', path: '/lobby/1v1' },
+    { id: 'party', title: 'CUSTOM PARTY', desc: 'Host a room and challenge your friends with unique codes.', color: '#a200ff', icon: '👥', badge: 'FRIENDS', path: '/party' },
+    { id: 'computer', title: 'VS AI', desc: 'Practice against an advanced AI model. No ELO loss.', color: '#ffcc00', icon: '🤖', badge: 'TRAINING', path: '/battle/computer' },
+    { id: 'speed', title: 'BLITZ MODE', desc: '50 questions in 60 seconds. Race the clock for leaderboard glory.', color: '#ff0055', icon: '⚡', badge: 'SOLO', path: '/lobby/speed' },
   ];
 
   const stats = [
-    { label: 'WINS', value: '47', color: '#00ffcc' },
-    { label: 'LOSSES', value: '23', color: '#ff0055' },
-    { label: 'WIN RATE', value: '67%', color: '#a200ff' },
-    { label: 'STREAK', value: '5🔥', color: '#ffcc00' },
+    { label: 'WINS', value: profile?.wins || 0, color: '#00ffcc' },
+    { label: 'LOSSES', value: profile?.losses || 0, color: '#ff0055' },
+    { label: 'WIN RATE', value: profile?.gamesPlayed ? `${Math.round((profile.wins / profile.gamesPlayed) * 100)}%` : '0%', color: '#a200ff' },
+    { label: 'STREAK', value: `${profile?.streak || 0}🔥`, color: '#ffcc00' },
   ];
 
   return (
@@ -51,14 +52,14 @@ const Dashboard = () => {
       </motion.div>
 
       {/* Game Mode Cards */}
-      <div className="grid md:grid-cols-3 gap-5 mb-8">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
         {modes.map((mode, i) => (
           <motion.div key={mode.id}
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i + 0.3 }}
             whileHover={{ y: -8, scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="game-card-3d p-6 cursor-pointer group flex flex-col justify-between min-h-[260px] relative"
             style={{ borderColor: `${mode.color}30` }}
-            onClick={() => navigate(`/lobby/${mode.id}`)}>
+            onClick={() => navigate(mode.path)}>
             {/* Top accent line */}
             <div className="absolute top-0 left-0 w-full h-[2px] opacity-60"
               style={{ background: `linear-gradient(90deg, transparent, ${mode.color}, transparent)` }} />
@@ -120,7 +121,7 @@ const Dashboard = () => {
               { name: 'ShadowByte', elo: 1890, rank: 1 },
               { name: 'NeuralNinja', elo: 1720, rank: 2 },
               { name: 'QuantumAce', elo: 1650, rank: 3 },
-              { name: user.username, elo: user.elo, rank: 14, isYou: true },
+              { name: profile?.username || 'Player', elo: profile?.elo || 1000, rank: 14, isYou: true },
             ].map((p) => (
               <div key={p.rank} className={`flex items-center gap-3 p-2 rounded-lg border transition-colors ${p.isYou ? 'bg-[#00ffcc]/5 border-[#00ffcc]/30' : 'bg-black/30 border-white/5 hover:border-white/10'}`}>
                 <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold font-mono ${p.rank <= 3 ? 'bg-[#ffcc00]/20 text-[#ffcc00]' : 'bg-white/5 text-[#8a8a99]'}`}>
