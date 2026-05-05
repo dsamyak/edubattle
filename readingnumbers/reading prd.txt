@@ -1,0 +1,169 @@
+Product Requirements Document (PRD)
+Reading and Writing Numbers — Grade 1 Math
+Intellia SG | Singapore Primary Mathematics Curriculum
+
+1. Executive Summary
+This document defines product requirements for the "Reading and Writing Numbers" interactive lesson module, delivered as part of Intellia SG's Grade 1 Math program (Lesson 1.2). The module targets Singapore Primary 1 students aged 6–7 and covers numbers 0–100 using a gamified, simulation-based learning model aligned with the Singapore Mathematics Framework (MOE).
+The product is a standalone web page hosted at https://intelliasg.com/courses/grade-1-math/lessons/reading-and-writing-numbers/ built using React and designed to match the visual and UX style established at https://number-counting-gamma.vercel.app/.
+
+2. Product Vision & Goals
+Vision
+To make number literacy fun, memorable, and effective for 6–7 year old Singapore students by combining animated simulations, scaffolded learning, and adaptive gamified practice.
+Goals
+GoalMetricLearning Completion≥85% of students complete the full learning journeyPractice Engagement≥90% attempt at least 10 practice questionsScore AchievementAverage quiz score ≥75% on first attemptSession DurationAverage engagement time ≥12 minutes per sessionCurriculum Alignment100% aligned to Singapore MOE Primary 1 syllabus
+
+3. Target Users
+Primary: Grade 1 Students (Age 6–7)
+
+Limited reading ability — prefer visuals, animations, sounds
+Short attention spans — need frequent rewards and variety
+Learn through play — gamification is essential
+Singapore context — familiar with local language and culture
+
+Secondary: Parents & Teachers
+
+Monitor student progress
+Assign as homework or classroom activity
+Expect curriculum-aligned content
+
+
+4. Curriculum Alignment (Singapore MOE)
+Topic: Reading and Writing Numbers (Primary 1, Unit 1.2)
+Learning Objectives (from Targeting Mathematics Primary 1A & 1B):
+
+Count, read and write numbers 0 to 10 (Phase 1)
+Count, read and write numbers 0 to 20 (Phase 2)
+Count, read and write numbers 0 to 40 (Phase 3)
+Count, read and write numbers 0 to 100 (Phase 4)
+Recognise number words (zero, one, two... ten, twenty... hundred)
+Write numbers in numerals and in words
+Match numerals to quantities using visual representations (ten-frames, number lines, base-10 blocks)
+
+Singapore Syllabus Concepts Covered:
+
+Number notation: numerals, number words
+Place value representation (tens and ones) for numbers up to 100
+Ordinal connection (sequence awareness)
+Visual-concrete-pictorial-abstract (CPA) progression
+
+
+5. Product Structure & User Journey
+5.1 Module Flow
+INTRO SCREEN
+    ↓
+PHASE 1: LEARN (Simulation-based)
+  → 4 Learning Stations (interactive animated simulations)
+    ↓
+PHASE 2: PRACTISE (Guided)
+  → 10 guided questions with hints
+    ↓
+PHASE 3: CHALLENGE (Gamified Quiz)
+  → 100 randomised questions (shown in sets of 10)
+  → Stars, XP, badges earned
+    ↓
+RESULTS SCREEN
+  → Score, badges, replay option
+5.2 Learning Stations (Simulation Phase)
+StationTopicSimulation Type1Numbers 0–10Animated object counting with ten-frame2Numbers 11–20Ten-frame + ones visual decomposition3Numbers 21–100Base-10 blocks (tens sticks + unit cubes)4Number WordsNumeral ↔ Word matching with audio
+5.3 Practice Question Types (100 Randomised Questions)
+TypeDescriptionExampleQ1Count & choose numeral[8 apples shown] → Choose: 6 / 8 / 9Q2Write the number word"23" → Type/choose: "twenty-three"Q3Match numeral to wordConnect 45 ↔ "forty-five"Q4Fill in the blank"___ tens and 3 ones = 43"Q5Base-10 block counting[4 tens, 2 ones shown] → What number?Q6Number before/after"What comes after 29?"Q7Read the word, write numeral"sixty-seven" → 67Q8Order numbersArrange 34, 12, 56 from smallestQ9Ten-frame reading[Filled ten-frame] → What number?Q10Word problem"Megan has twenty apples. Write this as a numeral."
+
+6. Gamification Design
+6.1 Reward System
+
+Stars (⭐): Earned per correct answer (max 3 stars per question set)
+XP Points: 10 XP per correct, 5 XP per retry-correct
+Badges: Unlockable milestones
+
+🏅 "Number Newbie" — Complete Learning Phase
+🥈 "Practice Pro" — Complete 10 practice questions
+🥇 "Number Master" — Score 80%+ on Challenge
+💎 "Perfect Speller" — 100% on number words
+
+
+Streak Counter: Consecutive correct answers shown with fire emoji 🔥
+Progress Bar: Visual journey map (Learning → Practice → Challenge)
+
+6.2 Feedback Mechanics
+
+✅ Correct: Celebratory animation + sound + encouraging message ("Amazing! You got it! 🎉")
+❌ Incorrect: Gentle retry message + hint shown ("Let's try again! Hint: Count the blocks 🧱")
+Max 2 hints per question, then answer revealed with explanation
+No negative scoring — encouragement-first approach
+
+6.3 Character / Mascot
+
+Friendly monkey mascot (aligned with Casco Publications Targeting Mathematics theme)
+Mascot reacts: happy when correct, thinking when question appears, cheering at milestone
+
+
+7. UX & Design Requirements
+7.1 Visual Design
+
+Theme: Bright, tropical, child-friendly (matching number-counting-gamma.vercel.app)
+Colours: Sky blue primary, golden yellow accent, coral red for alerts, white backgrounds
+Typography: Rounded, readable fonts (e.g. Nunito, Fredoka One)
+Icons & Illustrations: Cartoon-style, consistent art style
+Animations: Smooth, delightful, purposeful (not distracting)
+
+7.2 Accessibility
+
+Large click targets (minimum 44x44px)
+High contrast text (WCAG AA minimum)
+Audio narration for all questions (text-to-speech or recorded)
+Keyboard navigable
+No time pressure (optional timer mode for advanced users)
+
+7.3 Responsive Design
+
+Optimised for tablets (iPad primary device for classroom)
+Works on desktop browsers
+Mobile-friendly layout
+
+
+8. Content Requirements
+8.1 Number Ranges
+
+Phase 1: 0–10 (foundation)
+Phase 2: 11–20 (teen numbers — explicitly taught as special case in Singapore syllabus)
+Phase 3: 21–40 (two-digit with pattern recognition)
+Phase 4: 41–100 (full range with tens/ones structure)
+
+8.2 Question Bank (100 Questions)
+
+Minimum 10 questions per question type
+All questions randomised per session (no two sessions show same order)
+Questions drawn from real Singapore Primary 1 textbook examples (Targeting Mathematics, My Pals Are Here)
+Word problems use Singapore-context names (Megan, Wei Ming, Priya, Raju, Ahmad)
+
+8.3 Audio
+
+Number word pronunciation for all 1–100
+Question read-aloud support
+Celebration sound effects
+Background ambient music (optional, toggleable)
+
+
+9. Technical Platform Requirements
+
+Framework: React (JSX) — single file deployable
+Hosting: Integrated into WordPress page at intelliasg.com via iframe or embedded
+Browser Support: Chrome, Safari, Edge (latest 2 versions)
+No login required — works as guest learner
+Progress: Saved to localStorage (session persistence)
+Analytics: Track question attempts, scores, completion rates (future phase)
+
+
+10. Success Criteria
+CriterionTargetAll 100 questions randomised correctly✅ RequiredAll 4 learning simulations functional✅ RequiredGamification rewards working✅ RequiredMobile/tablet responsive✅ RequiredSingapore syllabus covered 100%✅ RequiredLoad time < 3 seconds✅ RequiredWCAG AA accessible✅ Required
+
+11. Out of Scope (v1.0)
+
+Teacher dashboard / analytics backend
+Student login / account system
+Multiplayer / class competition features
+Parent reporting emails
+Print worksheets generation
+
+
+Document Version: 1.0 | April 2026 | Intellia SG — Grade 1 Math Program

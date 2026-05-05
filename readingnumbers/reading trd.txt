@@ -1,0 +1,361 @@
+Technical Requirements Document (TRD)
+Reading and Writing Numbers — Grade 1 Math
+Intellia SG | Singapore Primary Mathematics Curriculum
+
+1. Technical Overview
+This document specifies the technical architecture, component design, data models, and implementation standards for the Reading and Writing Numbers interactive lesson module (Lesson 1.2) for Intellia SG's Grade 1 Math program.
+The module is a single-file React application rendered as a JSX artifact/component, designed to be embedded into the Intellia SG WordPress platform. It follows the visual theme established at https://number-counting-gamma.vercel.app/.
+
+2. Technology Stack
+LayerTechnologyRationaleUI FrameworkReact 18 (JSX)Component-based, supports hooksState ManagementReact useState / useReducerSufficient for single-module complexityStylingTailwind CSS (core utilities)Available in artifact environmentIconsLucide ReactAvailable via CDNAnimationCSS transitions + keyframesNo external dependencyPersistencelocalStorageSession state, no backend neededAudioWeb Speech API (SpeechSynthesis)Browser-native, no server neededMathVanilla JSNo library needed for arithmetic
+
+3. Application Architecture
+3.1 Component Hierarchy
+<App>
+  ├── <IntroScreen />           # Welcome screen with mascot
+  ├── <LearningPhase>           # Phase 1: Simulations
+  │   ├── <ProgressMap />       # Journey tracker
+  │   ├── <Station1_Counting /> # 0-10 with ten-frame
+  │   ├── <Station2_Teens />    # 11-20 with decomposition
+  │   ├── <Station3_TensOnes /> # 21-100 with base-10 blocks
+  │   └── <Station4_Words />    # Numeral ↔ word matching
+  ├── <PracticePhase>           # Phase 2: Guided practice
+  │   ├── <QuestionRenderer />  # Polymorphic question display
+  │   ├── <HintSystem />        # Graduated hints
+  │   └── <FeedbackOverlay />   # Correct/incorrect response
+  ├── <ChallengePhase>          # Phase 3: Gamified quiz
+  │   ├── <QuestionBank />      # 100-question randomised pool
+  │   ├── <ScoreTracker />      # XP, stars, streak
+  │   ├── <BadgeSystem />       # Achievement unlocks
+  │   └── <Mascot />            # Animated character
+  └── <ResultsScreen />         # Final score, badges, replay
+3.2 State Architecture
+javascript// Global App State
+const initialState = {
+  phase: 'intro',                    // 'intro' | 'learn' | 'practice' | 'challenge' | 'results'
+  currentStation: 0,                 // 0-3 for learning stations
+  learningComplete: false,
+  
+  // Practice state
+  practiceQuestions: [],             // 10 guided questions
+  practiceIndex: 0,
+  practiceScore: 0,
+  
+  // Challenge state
+  challengeQuestions: [],            // 100 randomised questions
+  challengeIndex: 0,
+  challengeScore: 0,
+  challengeXP: 0,
+  challengeStreak: 0,
+  maxStreak: 0,
+  hintsUsed: 0,
+  
+  // Rewards
+  badges: [],                        // Unlocked badge IDs
+  stars: 0,                          // Total stars earned
+  
+  // Settings
+  audioEnabled: true,
+  
+  // Persistence
+  sessionId: uuid()
+};
+
+4. Question Bank Data Model
+4.1 Question Schema
+typescriptinterface Question {
+  id: string;                        // Unique identifier e.g. "Q1_008"
+  type: QuestionType;                // Enum: 10 types
+  phase: 'practice' | 'challenge';
+  numberRange: '0-10' | '11-20' | '21-40' | '41-100';
+  difficulty: 1 | 2 | 3;           // 1=easy, 2=medium, 3=hard
+  
+  // Content
+  questionText: string;
+  visual?: VisualType;               // 'tenframe' | 'blocks' | 'objects' | 'numberline'
+  options?: string[];                // MCQ options (4 choices)
+  correctAnswer: string | number;
+  
+  // Hints
+  hint1: string;
+  hint2: string;
+  explanation: string;               // Shown after 2 failed attempts
+  
+  // Metadata
+  singaporeContext?: string;         // Name/context used (Megan, Wei Ming etc.)
+}
+
+type QuestionType = 
+  | 'count_choose_numeral'           // Q1: Count objects, pick numeral
+  | 'numeral_to_word'                // Q2: Write number word
+  | 'match_numeral_word'             // Q3: Match pairs
+  | 'tens_ones_fill'                 // Q4: ___ tens and ___ ones
+  | 'base10_read'                    // Q5: Count base-10 blocks
+  | 'before_after'                   // Q6: Number before/after
+  | 'word_to_numeral'                // Q7: Read word, write numeral
+  | 'ordering'                       // Q8: Order numbers smallest to largest
+  | 'tenframe_read'                  // Q9: Read ten-frame
+  | 'word_problem';                  // Q10: Singapore context word problem
+4.2 Question Distribution (100 Total)
+TypeCountDifficulty Splitcount_choose_numeral104 easy / 4 med / 2 hardnumeral_to_word103 / 4 / 3match_numeral_word104 / 3 / 3tens_ones_fill103 / 4 / 3base10_read104 / 4 / 2before_after104 / 3 / 3word_to_numeral103 / 4 / 3ordering103 / 4 / 3tenframe_read104 / 4 / 2word_problem103 / 4 / 3TOTAL10035 / 38 / 27
+
+5. Randomisation Engine
+5.1 Algorithm
+javascriptfunction generateQuestionSet(bank, count = 100) {
+  // Fisher-Yates shuffle for true randomisation
+  const shuffled = [...bank];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, count);
+}
+
+function generateMCQOptions(correct, range, count = 4) {
+  // Ensure distractors are plausible (within ±5 of correct)
+  const distractors = new Set();
+  while (distractors.size < count - 1) {
+    const d = correct + (Math.random() > 0.5 ? 1 : -1) * 
+              Math.ceil(Math.random() * 5);
+    if (d >= range.min && d <= range.max && d !== correct) {
+      distractors.add(d);
+    }
+  }
+  return shuffle([correct, ...distractors]);
+}
+5.2 Session Seeding
+
+Each session generates a unique question order
+Seed stored in localStorage so refreshing mid-session doesn't re-randomise
+On "New Game" / "Try Again", new seed generated
+
+
+6. Simulation Specifications
+6.1 Station 1 — Ten-Frame (Numbers 0–10)
+Visual: Animated 2×5 grid ten-frame
+Interaction: Click to add/remove counters
+Behaviour:
+
+Each filled cell = 1 object (star/apple/ball)
+Counter fills left-to-right, top-to-bottom
+Number label updates in real-time
+Number word spoken via Web Speech API on selection
+
+javascript// Ten-frame state
+const [filled, setFilled] = useState(0); // 0-10
+// Render: 10 cells, filled[:filled] = active
+6.2 Station 2 — Teen Numbers (11–20)
+Visual: One full ten-frame + expandable ones section
+Key Teaching Point: "1 ten and ___ ones = 1_"
+Interaction: Slider or +/- buttons for ones (1–10)
+Animation: Ones "snap" into the second frame
+6.3 Station 3 — Base-10 Blocks (21–100)
+Visual: Animated tens sticks (long orange bar = 10 units) + unit cubes
+Interaction:
+
+Drag tens sticks (0–9) into the workspace
+Drag unit cubes (0–9) into the workspace
+Real-time numeral display
+Layout: Place value chart labels: TENS | ONES
+
+javascript// Base-10 block state
+const [tens, setTens] = useState(0);  // 0-9
+const [ones, setOnes] = useState(0);  // 0-9
+const number = tens * 10 + ones;       // 0-99
+6.4 Station 4 — Number Words (Matching)
+Visual: Card matching game
+Content: Numeral cards ↔ word cards
+Interaction: Click numeral, then click matching word
+Feedback: Matched pairs glow green, shake if wrong
+Words covered: zero through one hundred (all 101 words)
+
+7. Visual Component Specs
+7.1 Ten-Frame Component
+jsxconst TenFrame = ({ filled, max = 10 }) => (
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 4 }}>
+    {Array.from({ length: max }).map((_, i) => (
+      <div key={i} className={`cell ${i < filled ? 'filled' : 'empty'}`} />
+    ))}
+  </div>
+);
+7.2 Base-10 Block Renderer
+jsxconst Base10Blocks = ({ tens, ones }) => (
+  <div className="blocks-area">
+    <div className="tens-column">
+      {Array.from({ length: tens }).map((_, i) => (
+        <TenStick key={i} />  // Vertical bar of 10 small squares
+      ))}
+    </div>
+    <div className="ones-column">
+      {Array.from({ length: ones }).map((_, i) => (
+        <UnitCube key={i} />  // Single square
+      ))}
+    </div>
+  </div>
+);
+7.3 Mascot Component
+jsxconst Mascot = ({ mood }) => {
+  const expressions = {
+    idle: '🐵',
+    happy: '🎉🐵',
+    thinking: '🤔🐵',
+    celebrate: '🥳🐵',
+  };
+  return (
+    <div className={`mascot mascot--${mood}`}>
+      {expressions[mood]}
+    </div>
+  );
+};
+
+8. Gamification Implementation
+8.1 XP System
+javascriptconst XP_VALUES = {
+  correctFirstTry: 10,
+  correctSecondTry: 7,
+  correctWithHint: 5,
+  streakBonus: (streak) => streak >= 5 ? 5 : 0,
+};
+
+function calculateXP(attempt, hintsUsed, streak) {
+  const base = attempt === 1 ? 10 : hintsUsed === 0 ? 7 : 5;
+  return base + XP_VALUES.streakBonus(streak);
+}
+8.2 Badge Unlock Logic
+javascriptconst BADGES = [
+  { id: 'number_newbie',    label: 'Number Newbie',    condition: (s) => s.learningComplete },
+  { id: 'practice_pro',     label: 'Practice Pro',     condition: (s) => s.practiceScore >= 8 },
+  { id: 'number_master',    label: 'Number Master',    condition: (s) => s.challengeScore >= 80 },
+  { id: 'perfect_speller',  label: 'Perfect Speller',  condition: (s) => s.wordQuestionsCorrect === 20 },
+  { id: 'streak_star',      label: 'Streak Star',      condition: (s) => s.maxStreak >= 10 },
+  { id: 'century_champ',    label: 'Century Champ',    condition: (s) => s.challengeScore === 100 },
+];
+8.3 Star Rating (per 10-question set)
+javascriptfunction calculateStars(correct, total = 10) {
+  if (correct >= 9) return 3;
+  if (correct >= 7) return 2;
+  if (correct >= 5) return 1;
+  return 0;
+}
+
+9. Audio Implementation
+9.1 Web Speech API Integration
+javascriptfunction speak(text) {
+  if (!window.speechSynthesis) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.85;     // Slightly slower for children
+  utterance.pitch = 1.1;     // Slightly higher pitch
+  utterance.lang = 'en-SG';  // Singapore English
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+}
+
+// Usage
+speak('The number forty-three');
+speak('That is correct! Well done!');
+9.2 Sound Effects (CSS + JS)
+javascript// Use AudioContext for simple tones
+const playTone = (frequency, duration = 200) => {
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  osc.frequency.value = frequency;
+  osc.connect(ctx.destination);
+  osc.start();
+  setTimeout(() => osc.stop(), duration);
+};
+
+const sounds = {
+  correct: () => playTone(880),   // High A note
+  wrong:   () => playTone(220),   // Low A note
+  badge:   () => [523, 659, 784].forEach((f, i) => setTimeout(() => playTone(f), i * 150)),
+};
+
+10. Persistence & Storage
+javascriptconst STORAGE_KEY = 'intellia_rw_numbers_v1';
+
+const saveProgress = (state) => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    phase: state.phase,
+    badges: state.badges,
+    challengeScore: state.challengeScore,
+    challengeXP: state.challengeXP,
+    timestamp: Date.now(),
+  }));
+};
+
+const loadProgress = () => {
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (data && (Date.now() - data.timestamp) < 24 * 60 * 60 * 1000) {
+      return data; // Resume if within 24 hours
+    }
+  } catch (e) { /* fresh start */ }
+  return null;
+};
+
+11. CSS Animation Keyframes
+css@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+@keyframes celebrate {
+  0% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-10deg) scale(1.1); }
+  75% { transform: rotate(10deg) scale(1.1); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-60px); opacity: 0; }
+}
+
+12. Performance Requirements
+MetricTargetInitial load time< 2 secondsTime to first interaction< 1 secondAnimation frame rate60fpsMemory usage< 50MBBundle size< 500KB
+
+13. Browser & Device Support
+EnvironmentSupport LevelChrome 110+FullSafari 15+ (iPad/iPhone)FullFirefox 110+FullEdge 110+FullAndroid ChromeFullIE 11Not supported
+
+14. Embedding in WordPress (Intellia SG)
+Option A: React Component via CDN
+html<!-- In WordPress page via Custom HTML block -->
+<div id="reading-writing-numbers-app"></div>
+<script src="https://cdn.intelliasg.com/lessons/reading-writing-numbers.js"></script>
+Option B: iFrame Embed
+html<iframe 
+  src="https://lessons.intelliasg.com/grade1/reading-writing-numbers"
+  width="100%" 
+  height="700px"
+  frameborder="0"
+  allow="autoplay; microphone"
+></iframe>
+
+15. Quality Assurance Checklist
+
+ All 100 questions render correctly
+ MCQ options always include correct answer
+ No duplicate options in any question
+ Number words 0–100 all spelled correctly
+ Ten-frame renders correctly for 0–10
+ Base-10 blocks render correctly for 0–99
+ Badge unlock triggers at correct conditions
+ XP calculation correct for all attempt types
+ localStorage save/load working
+ Audio fallback when Web Speech unavailable
+ All animations run at 60fps
+ Responsive layout on 768px tablet
+ Responsive layout on 375px mobile
+ Keyboard navigation functional
+
+
+Document Version: 1.0 | April 2026 | Intellia SG — Grade 1 Math Program
+Technical Lead: Intellia Engineering Team
